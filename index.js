@@ -78,6 +78,20 @@ client.on('messageCreate', async (message) => {
     await commandHandler.handleMessageCommand(message);
 });
 
+// Auto-delete messages in specific channel after 30 seconds
+const AUTO_DELETE_CHANNEL_ID = '1434685035536974024';
+client.on('messageCreate', async (message) => {
+    if (message.channel.id !== AUTO_DELETE_CHANNEL_ID) return;
+
+    setTimeout(async () => {
+        try {
+            await message.delete();
+        } catch (err) {
+            console.error(`❌ Failed to auto-delete message ${message.id}:`, err.message);
+        }
+    }, 30000);
+});
+
 // Handle forum thread creation - automatic stats check
 client.on('threadCreate', async (thread) => {
     // Check if this is the report-user forum channel
